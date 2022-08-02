@@ -25,9 +25,7 @@ SECRET_KEY = '-hscxtfqisk*gq!2d)e%@r$vynx#jzo3x!74^#f4$fqh#1*dtq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-LOCAL = True if os.name == "nt" else False
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,10 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
-    'posts',
+
+    # third party
     'djoser',
     'django_filters',
+    'rest_framework',
+
+    # apps
+    'api',
+    'users',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -82,11 +86,11 @@ WSGI_APPLICATION = 'WB_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB'),
+        'NAME': os.environ.get('POSTGRES_NAME'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 

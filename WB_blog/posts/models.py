@@ -5,7 +5,7 @@ User = get_user_model()
 
 class Post(models.Model):
     """Модель статьи в блоге."""
-    name = models.CharField()
+    name = models.CharField(max_length=15)
     text = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
@@ -15,7 +15,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return self.name[:15]
+        return self.name
 
     class Meta:
         ordering = ['-pub_date']
