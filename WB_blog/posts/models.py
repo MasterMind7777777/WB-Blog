@@ -15,25 +15,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return self.text[:15]
+        return self.name[:15]
 
     class Meta:
         ordering = ['-pub_date']
-
-
-class Follow(models.Model):
-    """Модель подписки на автора."""
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='follower')
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='following')
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'author'], name='unique follow')
-        ]
