@@ -3,7 +3,6 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from django.contrib.auth import get_user_model
 from.models import Follow
 from django.shortcuts import get_object_or_404
-from posts.serializers import PostSerializer
 
 User = get_user_model()
 
@@ -76,20 +75,3 @@ class ShowFollowsSerializer(UserSerializer):
 
     def get_recipes_count(self, author):
         return author.posts.count()
-
-
-class FollowerSerializer(serializers.ModelSerializer):
-    is_subscribed = serializers.SerializerMethodField()
-    posts = PostSerializer(many=True)
-    posts_count = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'username', 'first_name', 'last_name', 'is_subscribed', 'posts', 'posts_count')
-
-    @staticmethod
-    def get_is_subscribed(obj):
-        return True
-
-    def get_posts_count(self, obj):
-        return obj.posts.count()
