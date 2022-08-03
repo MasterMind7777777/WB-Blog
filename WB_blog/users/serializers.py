@@ -15,11 +15,12 @@ class UserCreateSerializer(UserCreateSerializer):
 
 class UserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
+    post_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'is_subscribed')
+                  'is_subscribed', 'post_count')
 
     def get_is_subscribed(self, author):
         user = self.context.get('request').user
@@ -27,12 +28,15 @@ class UserSerializer(UserSerializer):
             user=user,
             author=author.id
         ).exists()
+    
+    def get_post_count(self, author):
+        return author.posts.count()
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'id', 'first_name', 'last_name')
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ('username', 'email', 'id', 'first_name', 'last_name')
 
 
 class CreateFollowSerializer(serializers.ModelSerializer):

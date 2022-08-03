@@ -6,11 +6,12 @@ from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from .models import Follow
 from api.paginators import SmallPageNumberPagination
-from rest_framework import status
+from rest_framework import status, filters
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+import operator
 
 User = get_user_model()
 
@@ -18,6 +19,26 @@ User = get_user_model()
 class CustomUserViewSet(UserViewSet):
     serializer_class = UserSerializer
     pagination_class = SmallPageNumberPagination
+    # filter_backends = [filters.OrderingFilter]
+    # ordering_fields = ['id', 'post_count']
+    # queryset = User.objects.all().order_by('-id')
+
+    def list(self, request, *args, **kwargs):
+        response = super(CustomUserViewSet, self).list(request, args, kwargs)
+        ordering = request.query_params.get('ordering')
+        if ordering == None:
+            ordering = '-id'
+        response.data['results'] = sorted(response.data['results'], key=operator.itemgetter(ordering.replace('-',''),))
+
+        if "-" in ordering:      
+            response.data['results'] = sorted(response.data['results'], key=lambda k: (k[ordering.replace('-','')], ), reverse=True)
+        else:
+            response.data['results'] = sorted(response.data['results'], key=lambda k: (k[ordering], ))
+
+        return response
+
+    def get_queryset(self):
+        return User.objects.all()
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])
