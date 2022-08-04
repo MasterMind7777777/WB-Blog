@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import PostViewSet
+from posts.views import PostViewSet
 
 from rest_framework.routers import DefaultRouter
 
