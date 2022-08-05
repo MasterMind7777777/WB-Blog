@@ -41,4 +41,7 @@ get
 post
 /api/posts/<pk>/read/
 
+посмотреть посты выбраного пользователя
+post
+/api/users/<pk>/posts/
 

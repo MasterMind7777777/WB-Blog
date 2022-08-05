@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from .models import Follow
+from posts.serializers import ShowPostSerializer
+from posts.models import Post
 from api.paginators import SmallPageNumberPagination
 from rest_framework import status, filters
 from rest_framework.decorators import action
@@ -19,9 +21,6 @@ User = get_user_model()
 class CustomUserViewSet(UserViewSet):
     serializer_class = UserSerializer
     pagination_class = SmallPageNumberPagination
-    # filter_backends = [filters.OrderingFilter]
-    # ordering_fields = ['id', 'post_count']
-    # queryset = User.objects.all().order_by('-id')
 
     def list(self, request, *args, **kwargs):
         response = super(CustomUserViewSet, self).list(request, args, kwargs)
@@ -50,7 +49,18 @@ class CustomUserViewSet(UserViewSet):
         queryset = User.objects.filter(following__user=request.user)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = FollowerSerializer(queryset, many=True)
+            serializer = ShowPostSerializer(queryset, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def posts(self, request, id=None):
+        queryset = Post.objects.filter(author=id)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = ShowPostSerializer(queryset, many=True)
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)

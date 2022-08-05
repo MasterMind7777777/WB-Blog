@@ -62,6 +62,11 @@ class PostSerializer(serializers.ModelSerializer):
         )
         return post
 
+class ShowPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = '__all__'
 
 class FollowerSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
