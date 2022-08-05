@@ -49,6 +49,17 @@ class CustomUserViewSet(UserViewSet):
         queryset = User.objects.filter(following__user=request.user)
         page = self.paginate_queryset(queryset)
         if page is not None:
+            serializer = ShowFollowsSerializer(queryset, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def subscriptions_posts(self, request):
+        queryset = Post.objects.filter(author__following__user=request.user)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
             serializer = ShowPostSerializer(queryset, many=True)
             return self.get_paginated_response(serializer.data)
 

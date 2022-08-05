@@ -45,3 +45,10 @@ post
 post
 /api/users/<pk>/posts/
 
+подписатся на пользователя
+post
+/api/users/<pk>/subscribe/
+
+посмотреть посты авторов на которых подписан
+get
+/api/users/subscriptions_posts/
