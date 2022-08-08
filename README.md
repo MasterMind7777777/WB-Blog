@@ -9,13 +9,18 @@ post
     "password": ""
 }
 
-получение токена
+получение токена(вход)
 post
 /api/auth/token/login/
 {
     "username": "",
     "password": ""
 }
+
+удаление токена(выход)
+post
+/api/auth/token/logout/
+
 
 список постов
 get
