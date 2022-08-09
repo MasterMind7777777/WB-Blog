@@ -1,8 +1,7 @@
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
-from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from api.tests import TestBase
 
 User = get_user_model()
 
@@ -19,21 +18,7 @@ class TestUserAuth(APITestCase):
         response = self.client.post('/api/auth/token/login/', data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class TestUserMange(APITestCase):
-
-    def setUp(self):
-        self.data = {'username': 'test_user', 'password': 'Qdwq1234'}
-        self.data2 = {'username': 'test_user2', 'password': 'Qdwq1234'}
-        self.post = {"name": "test post name", "text": "test post text"}
-        self.post = {"name": "test post name2", "text": "test post text2"}
-        self.client.post('/api/users/', self.data)
-        self.client2 = APIClient()
-        self.client2.post('/api/users/', self.data2)
-        response = self.client.post('/api/auth/token/login/', self.data)
-        self.token = response.json()['auth_token']
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-        self.client.post('/api/posts/', self.post)
-        self.client.post('/api/posts/', self.post)
+class TestUserMange(TestBase):
 
     def test_log_out(self):
         response = self.client.post('/api/auth/token/logout/')
