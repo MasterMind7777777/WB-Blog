@@ -1,0 +1,561 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "WB Blog API",
+    "description": "The API for WB tech",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/GOGONESTNEST/Wb_blog/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "paths": {
+    "/api/users/": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Show all users",
+        "operationId": "ShowUsers",
+        "parameters": [
+          {
+            "name": "?ordering",
+            "in": "query",
+            "description": "((Query String in Paths)) Sort users by amount of posts(optional).",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "post_count"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Create user account",
+        "operationId": "SignUp",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "create username for display",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "create password",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User was created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/<pk>/subscribe/": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "subscribe to user",
+        "operationId": "Subscribe",
+        "responses": {
+          "201": {
+            "description": "User was created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/<pk>/posts/": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Show posts of the user",
+        "operationId": "ListPostsByUser",
+        "responses": {
+          "200": {
+            "description": "List all posts by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/subscriptions_posts/": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Show posts of the user",
+        "operationId": "ListPostsSub",
+        "responses": {
+          "200": {
+            "description": "List all posts from authors that you are subscribed to",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/auth/token/login/": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "description": "Create token for user",
+        "operationId": "TokenIn",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "enter username",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "enter password",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token was created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token/logout/": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "description": "Destroy token for user",
+        "operationId": "TokenOut",
+        "responses": {
+          "204": {
+            "description": "Token was destroyed successfully"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/posts/": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Show all posts",
+        "operationId": "AllPosts",
+        "responses": {
+          "200": {
+            "description": "List all posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Create new posts",
+        "operationId": "NewPosts",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Title of the post.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "maxLength": 15,
+              "type": "string"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "description": "Text of the post.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "View created posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/posts/<pk>/": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "Show posts detail",
+        "operationId": "PostDetail",
+        "responses": {
+          "200": {
+            "description": "View post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/posts/<pk>/read/": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "description": "mark post as read",
+        "operationId": "Read",
+        "responses": {
+          "201": {
+            "description": "Post was marked as read successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201_3"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "is_subscribed": {
+            "type": "boolean"
+          },
+          "post_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "pub_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "author": {
+            "type": "integer",
+            "description": "Author id"
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Amount of users."
+          },
+          "next": {
+            "type": "string",
+            "description": "Link to next page."
+          },
+          "previous": {
+            "type": "string",
+            "description": "Link to previous page."
+          },
+          "results": {
+            "maxItems": 10,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "inline_response_201": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "email of the user."
+          },
+          "username": {
+            "type": "string",
+            "description": "The user name."
+          },
+          "id": {
+            "type": "integer",
+            "description": "The user ID."
+          }
+        }
+      },
+      "inline_response_201_1": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "integer",
+            "description": "pk of subscriber."
+          },
+          "author": {
+            "type": "integer",
+            "description": "pk of author."
+          }
+        }
+      },
+      "inline_response_200_1": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Amount of posts."
+          },
+          "next": {
+            "type": "string",
+            "description": "Link to next page."
+          },
+          "previous": {
+            "type": "string",
+            "description": "Link to previous page."
+          },
+          "results": {
+            "maxItems": 10,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "auth_token": {
+            "type": "string",
+            "description": "token of the user."
+          }
+        }
+      },
+      "inline_response_201_2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id of the post"
+          },
+          "author": {
+            "$ref": "#/components/schemas/User"
+          },
+          "is_readed": {
+            "type": "boolean",
+            "description": "has been readed"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the post"
+          },
+          "text": {
+            "type": "string",
+            "description": "Text of the post"
+          },
+          "pub_date": {
+            "type": "integer",
+            "description": "Date post was published",
+            "format": "date-time"
+          }
+        }
+      },
+      "inline_response_201_3": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "integer",
+            "description": "pk of subscriber."
+          },
+          "post": {
+            "type": "integer",
+            "description": "pk of post."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "name": "X-API-Key",
+        "in": "header"
+      }
+    }
+  }
+}

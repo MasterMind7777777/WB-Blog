@@ -54,7 +54,7 @@ class TestUserMange(TestBase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, 'loged in self sub')
 
     def test_user_post(self):
-        response = self.client2.get('/api/users/1/posts/')
+        response = self.client2.post('/api/users/1/posts/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         response = self.client.get('/api/users/')
         id1 = str(response.json()['results'][0]['id'])

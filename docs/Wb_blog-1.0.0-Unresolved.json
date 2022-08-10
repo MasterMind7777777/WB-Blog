@@ -1,0 +1,534 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "WB Blog API",
+    "description" : "The API for WB tech"
+  },
+  "paths" : {
+    "/api/users/" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "description" : "Create user account",
+        "operationId" : "SignUp",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "username",
+          "description" : "create username for display",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "password",
+          "description" : "create password",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "User was created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "email" : {
+                      "type" : "string",
+                      "description" : "email of the user."
+                    },
+                    "username" : {
+                      "type" : "string",
+                      "description" : "The user name."
+                    },
+                    "id" : {
+                      "type" : "integer",
+                      "description" : "The user ID."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Users" ],
+        "description" : "Show all users",
+        "operationId" : "ShowUsers",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "?ordering",
+          "description" : "((Query String in Paths)) Sort users by amount of posts(optional).",
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "post_count" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of all users",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "count" : {
+                      "type" : "integer",
+                      "description" : "Amount of users."
+                    },
+                    "next" : {
+                      "type" : "string",
+                      "description" : "Link to next page."
+                    },
+                    "previous" : {
+                      "type" : "string",
+                      "description" : "Link to previous page."
+                    },
+                    "results" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/User"
+                      },
+                      "minItems" : 0,
+                      "maxItems" : 10
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/<pk>/subscribe/" : {
+      "post" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Users" ],
+        "description" : "subscribe to user",
+        "operationId" : "Subscribe",
+        "responses" : {
+          "201" : {
+            "description" : "User was created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "type" : "integer",
+                      "description" : "pk of subscriber."
+                    },
+                    "author" : {
+                      "type" : "integer",
+                      "description" : "pk of author."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/<pk>/posts/" : {
+      "post" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Users" ],
+        "description" : "Show posts of the user",
+        "operationId" : "ListPostsByUser",
+        "responses" : {
+          "200" : {
+            "description" : "List all posts by user",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "count" : {
+                      "type" : "integer",
+                      "description" : "Amount of posts."
+                    },
+                    "next" : {
+                      "type" : "string",
+                      "description" : "Link to next page."
+                    },
+                    "previous" : {
+                      "type" : "string",
+                      "description" : "Link to previous page."
+                    },
+                    "results" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/Post"
+                      },
+                      "minItems" : 0,
+                      "maxItems" : 10
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/subscriptions_posts/" : {
+      "get" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Users" ],
+        "description" : "Show posts of the user",
+        "operationId" : "ListPostsSub",
+        "responses" : {
+          "200" : {
+            "description" : "List all posts from authors that you are subscribed to",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "count" : {
+                      "type" : "integer",
+                      "description" : "Amount of posts."
+                    },
+                    "next" : {
+                      "type" : "string",
+                      "description" : "Link to next page."
+                    },
+                    "previous" : {
+                      "type" : "string",
+                      "description" : "Link to previous page."
+                    },
+                    "results" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/Post"
+                      },
+                      "minItems" : 0,
+                      "maxItems" : 10
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token/login/" : {
+      "post" : {
+        "tags" : [ "Token" ],
+        "description" : "Create token for user",
+        "operationId" : "TokenIn",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "username",
+          "description" : "enter username",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "password",
+          "description" : "enter password",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Token was created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "auth_token" : {
+                      "type" : "string",
+                      "description" : "token of the user."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token/logout/" : {
+      "post" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Token" ],
+        "description" : "Destroy token for user",
+        "operationId" : "TokenOut",
+        "responses" : {
+          "204" : {
+            "description" : "Token was destroyed successfully"
+          }
+        }
+      }
+    },
+    "/api/posts/" : {
+      "get" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Posts" ],
+        "description" : "Show all posts",
+        "operationId" : "AllPosts",
+        "responses" : {
+          "200" : {
+            "description" : "List all posts",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "count" : {
+                      "type" : "integer",
+                      "description" : "Amount of posts."
+                    },
+                    "next" : {
+                      "type" : "string",
+                      "description" : "Link to next page."
+                    },
+                    "previous" : {
+                      "type" : "string",
+                      "description" : "Link to previous page."
+                    },
+                    "results" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/Post"
+                      },
+                      "minItems" : 0,
+                      "maxItems" : 10
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Posts" ],
+        "description" : "Create new posts",
+        "operationId" : "NewPosts",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "name",
+          "description" : "Title of the post.",
+          "schema" : {
+            "type" : "string",
+            "maxLength" : 15
+          }
+        }, {
+          "in" : "query",
+          "name" : "text",
+          "description" : "Text of the post.",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "View created posts",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "id" : {
+                      "type" : "string",
+                      "description" : "id of the post"
+                    },
+                    "author" : {
+                      "$ref" : "#/components/schemas/User"
+                    },
+                    "is_readed" : {
+                      "type" : "boolean",
+                      "description" : "has been readed"
+                    },
+                    "name" : {
+                      "type" : "string",
+                      "description" : "Title of the post"
+                    },
+                    "text" : {
+                      "type" : "string",
+                      "description" : "Text of the post"
+                    },
+                    "pub_date" : {
+                      "type" : "integer",
+                      "format" : "date-time",
+                      "description" : "Date post was published"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/<pk>/" : {
+      "get" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Posts" ],
+        "description" : "Show posts detail",
+        "operationId" : "PostDetail",
+        "responses" : {
+          "200" : {
+            "description" : "View post",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "id" : {
+                      "type" : "string",
+                      "description" : "id of the post"
+                    },
+                    "author" : {
+                      "$ref" : "#/components/schemas/User"
+                    },
+                    "is_readed" : {
+                      "type" : "boolean",
+                      "description" : "has been readed"
+                    },
+                    "name" : {
+                      "type" : "string",
+                      "description" : "Title of the post"
+                    },
+                    "text" : {
+                      "type" : "string",
+                      "description" : "Text of the post"
+                    },
+                    "pub_date" : {
+                      "type" : "integer",
+                      "format" : "date-time",
+                      "description" : "Date post was published"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/<pk>/read/" : {
+      "post" : {
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "tags" : [ "Posts" ],
+        "description" : "mark post as read",
+        "operationId" : "Read",
+        "responses" : {
+          "201" : {
+            "description" : "Post was marked as read successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "type" : "integer",
+                      "description" : "pk of subscriber."
+                    },
+                    "post" : {
+                      "type" : "integer",
+                      "description" : "pk of post."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "ApiKeyAuth" : {
+        "type" : "apiKey",
+        "in" : "header",
+        "name" : "X-API-Key"
+      }
+    },
+    "schemas" : {
+      "User" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "format" : "email"
+          },
+          "id" : {
+            "type" : "integer"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "first_name" : {
+            "type" : "string"
+          },
+          "last_name" : {
+            "type" : "string"
+          },
+          "is_subscribed" : {
+            "type" : "boolean"
+          },
+          "post_count" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "Post" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "text" : {
+            "type" : "string"
+          },
+          "pub_date" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "author" : {
+            "type" : "integer",
+            "description" : "Author id"
+          }
+        }
+      }
+    }
+  },
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/GOGONESTNEST/Wb_blog/1.0.0"
+  } ]
+}
